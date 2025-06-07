@@ -23,27 +23,28 @@ export default function UsersPage({ users = [] }: UsersPageProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  try {
-    const res = await fetch("https://jsonplaceholder.typicode.com/users");
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch users");
+export async function getStaticProps() {
+    try {
+      const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  
+      if (!res.ok) {
+        throw new Error("Failed to fetch users");
+      }
+  
+      const users: UserProps[] = await res.json();
+  
+      return {
+        props: {
+          users,
+        },
+      };
+    } catch (error) {
+      console.error("Error in getStaticProps (users):", error);
+      return {
+        props: {
+          users: [],
+        },
+      };
     }
-
-    const users: UserProps[] = await res.json();
-
-    return {
-      props: {
-        users,
-      },
-    };
-  } catch (error) {
-    console.error("Error in getStaticProps (users):", error);
-    return {
-      props: {
-        users: [],
-      },
-    };
   }
-};
+  
